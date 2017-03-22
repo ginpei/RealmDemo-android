@@ -14,11 +14,21 @@ import io.realm.RealmResults;
 public class MainActivity extends AppCompatActivity {
 
     public static final String TAG = "#G#MainActivity";
+    private Realm realm;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        realm = Realm.getDefaultInstance();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        realm.close();
     }
 
     public void createButton_click(View view) {
@@ -32,8 +42,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void createUser(String name) {
-        final Realm realm = Realm.getDefaultInstance();
-
         realm.beginTransaction();
 
         int id = findLastId() + 1;
@@ -42,13 +50,10 @@ public class MainActivity extends AppCompatActivity {
 
         realm.commitTransaction();
 
-        realm.close();
-
         Toast.makeText(this, "Inserted a row!", Toast.LENGTH_SHORT).show();
     }
 
     private int findLastId() {
-        final Realm realm = Realm.getDefaultInstance();
         RealmQuery<User> query = realm.where(User.class);
         if (query.count() > 0) {
             return query
@@ -60,16 +65,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void readAllButton_click(View view) {
-        final Realm realm = Realm.getDefaultInstance();
-
         RealmResults<User> users = realm.where(User.class).findAll();
         Log.d(TAG, String.format("readAllButton_click: %d user(s).", users.size()));
         for (int i = 0; i < users.size(); i++) {
             User user = users.get(i);
             Log.d(TAG, String.format("readAllButton_click: #%d %s", user.getId(), user.getName()));
         }
-
-        realm.close();
 
         Toast.makeText(MainActivity.this, "Read " + users.size() + " user(s)!", Toast.LENGTH_SHORT).show();
     }
@@ -86,8 +87,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void readUser(final int id) {
-        final Realm realm = Realm.getDefaultInstance();
-
         User user = realm.where(User.class).equalTo("id", id).findFirst();
         if (user != null) {
             Log.d(TAG, String.format("readAllButton_click: #%d %s", user.getId(), user.getName()));
@@ -95,8 +94,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(MainActivity.this, "User not found!", Toast.LENGTH_SHORT).show();
         }
-
-        realm.close();
     }
 
     public void updateAllButton_click(View view) {
@@ -109,8 +106,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateAllUsers(String name) {
-        final Realm realm = Realm.getDefaultInstance();
-
         RealmResults<User> users = realm.where(User.class).findAll();
 
         realm.beginTransaction();
@@ -121,8 +116,6 @@ public class MainActivity extends AppCompatActivity {
         }
 
         realm.commitTransaction();
-
-        realm.close();
 
         Log.d(TAG, String.format("readAllButton_click: %d user(s).", users.size()));
         Toast.makeText(MainActivity.this, "Updated " + users.size() + " user(s)!", Toast.LENGTH_SHORT).show();
@@ -144,8 +137,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateUser(final int id, final String name) {
-        final Realm realm = Realm.getDefaultInstance();
-
         User user = realm.where(User.class).equalTo("id", id).findFirst();
         if (user != null) {
             realm.beginTransaction();
@@ -157,8 +148,6 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(MainActivity.this, "User not found!", Toast.LENGTH_SHORT).show();
         }
-
-        realm.close();
     }
 
     public void deleteAllButton_click(View view) {
@@ -167,8 +156,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deleteAllUsers() {
-        final Realm realm = Realm.getDefaultInstance();
-
         RealmResults<User> users = realm.where(User.class).findAll();
         int count = users.size();
         realm.beginTransaction();
@@ -176,8 +163,6 @@ public class MainActivity extends AppCompatActivity {
             user.deleteFromRealm();
         }
         realm.commitTransaction();
-
-        realm.close();
 
         Log.d(TAG, String.format("deleteAllUsers: %d user(s).", count));  // users.size() returns 0 now
         Toast.makeText(MainActivity.this, "Deleted " + count + " user(s)!", Toast.LENGTH_SHORT).show();
@@ -195,8 +180,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void deleteUser(final int id) {
-        final Realm realm = Realm.getDefaultInstance();
-
         User user = realm.where(User.class).equalTo("id", id).findFirst();
         if (user != null) {
             realm.beginTransaction();
@@ -208,7 +191,5 @@ public class MainActivity extends AppCompatActivity {
         } else {
             Toast.makeText(MainActivity.this, "User not found!", Toast.LENGTH_SHORT).show();
         }
-
-        realm.close();
     }
 }
