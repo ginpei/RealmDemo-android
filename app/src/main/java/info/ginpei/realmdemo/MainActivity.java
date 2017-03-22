@@ -112,4 +112,37 @@ public class MainActivity extends AppCompatActivity {
 
         realm.close();
     }
+
+    public void updateButton_click(View view) {
+        InputDialogBuilder.show(this, "Update (1/2)", "Input user's ID", resultId -> {
+            if (resultId != null && !resultId.isEmpty()) {
+                final int id = Integer.parseInt(resultId);
+
+                InputDialogBuilder.show(MainActivity.this, "Update (2/2)", "Input new name for the user #" + id, resultName -> {
+                    if (resultName != null && !resultName.isEmpty()) {
+                        // OK beat it!
+                        updateUser(id, resultName);
+                    }
+                });
+            }
+        });
+    }
+
+    private void updateUser(final int id, final String name) {
+        final Realm realm = Realm.getDefaultInstance();
+
+        User user = realm.where(User.class).equalTo("id", id).findFirst();
+        if (user != null) {
+            realm.beginTransaction();
+            user.setName(name);
+            realm.commitTransaction();
+
+            Log.d(TAG, String.format("updateUser: #%d %s", user.getId(), user.getName()));
+            Toast.makeText(MainActivity.this, "Updated an user!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(MainActivity.this, "User not found!", Toast.LENGTH_SHORT).show();
+        }
+
+        realm.close();
+    }
 }
