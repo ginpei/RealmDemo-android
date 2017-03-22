@@ -68,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         Log.d(TAG, "readAllButton_click: %d user(s)." + users.size());
         for (int i = 0; i < users.size(); i++) {
             User user = users.get(i);
-            Log.d(TAG, String.format("readAllButton_click: #%d %s", i, user.getName()));
+            Log.d(TAG, String.format("readAllButton_click: #%d %s", user.getId(), user.getName()));
         }
 
         Toast.makeText(MainActivity.this, "Read " + users.size() + " user(s)!", Toast.LENGTH_SHORT).show();
