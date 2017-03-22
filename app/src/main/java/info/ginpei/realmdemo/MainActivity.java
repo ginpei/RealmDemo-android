@@ -174,4 +174,33 @@ public class MainActivity extends AppCompatActivity {
 
         realm.close();
     }
+
+    public void deleteButton_click(View view) {
+        InputDialogBuilder.show(this, "Delete", "Input user's ID", result -> {
+            if (result != null && !result.isEmpty()) {
+                int id = Integer.parseInt(result);
+
+                // OK search and destroy!
+                deleteUser(id);
+            }
+        });
+    }
+
+    private void deleteUser(final int id) {
+        final Realm realm = Realm.getDefaultInstance();
+
+        User user = realm.where(User.class).equalTo("id", id).findFirst();
+        if (user != null) {
+            realm.beginTransaction();
+            user.deleteFromRealm();
+            realm.commitTransaction();
+
+            Log.d(TAG, String.format("deleteUser: #%d", id));  // user.getId() and user.getName() throw IllegalStateException after deleting
+            Toast.makeText(MainActivity.this, "Deleted an user!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(MainActivity.this, "User not found!", Toast.LENGTH_SHORT).show();
+        }
+
+        realm.close();
+    }
 }
