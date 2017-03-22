@@ -87,4 +87,29 @@ public class MainActivity extends AppCompatActivity {
 
         Toast.makeText(MainActivity.this, "Read " + users.size() + " user(s)!", Toast.LENGTH_SHORT).show();
     }
+
+    public void readButton_click(View view) {
+        InputDialogBuilder.show(this, "Read", "Input user's ID", result -> {
+            if (result != null && !result.isEmpty()) {
+                int id = Integer.parseInt(result);
+
+                // OK let's find the guy!
+                readUser(id);
+            }
+        });
+    }
+
+    private void readUser(final int id) {
+        final Realm realm = Realm.getDefaultInstance();
+
+        User user = realm.where(User.class).equalTo("id", id).findFirst();
+        if (user != null) {
+            Log.d(TAG, String.format("readAllButton_click: #%d %s", user.getId(), user.getName()));
+            Toast.makeText(MainActivity.this, "Read an user!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(MainActivity.this, "User not found!", Toast.LENGTH_SHORT).show();
+        }
+
+        realm.close();
+    }
 }
