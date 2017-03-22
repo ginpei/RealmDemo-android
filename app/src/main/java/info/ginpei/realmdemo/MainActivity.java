@@ -56,6 +56,8 @@ public class MainActivity extends AppCompatActivity {
 
         realm.commitTransaction();
 
+        realm.close();
+
         Toast.makeText(this, "Inserted a row!", Toast.LENGTH_SHORT).show();
     }
 
@@ -80,6 +82,8 @@ public class MainActivity extends AppCompatActivity {
             User user = users.get(i);
             Log.d(TAG, String.format("readAllButton_click: #%d %s", user.getId(), user.getName()));
         }
+
+        realm.close();
 
         Toast.makeText(MainActivity.this, "Read " + users.size() + " user(s)!", Toast.LENGTH_SHORT).show();
     }
