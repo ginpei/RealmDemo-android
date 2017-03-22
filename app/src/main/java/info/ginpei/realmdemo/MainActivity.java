@@ -77,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         final Realm realm = Realm.getDefaultInstance();
 
         RealmResults<User> users = realm.where(User.class).findAll();
-        Log.d(TAG, "readAllButton_click: %d user(s)." + users.size());
+        Log.d(TAG, String.format("readAllButton_click: %d user(s).", users.size()));
         for (int i = 0; i < users.size(); i++) {
             User user = users.get(i);
             Log.d(TAG, String.format("readAllButton_click: #%d %s", user.getId(), user.getName()));
