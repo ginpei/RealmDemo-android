@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
+import info.ginpei.realmdemo.util.InputDialogBuilder;
 import io.realm.Realm;
 import io.realm.RealmQuery;
 import io.realm.RealmResults;
@@ -35,14 +36,23 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void createButton_click(View view) {
+        // show a dialog and receive new user's name
+        InputDialogBuilder.show(this, "Create", "Input new user's name", result -> {
+            if (result != null && !result.isEmpty()) {
+                // OK let's make it!
+                createUser(result);
+            }
+        });
+    }
+
+    private void createUser(String name) {
         final Realm realm = Realm.getDefaultInstance();
 
         realm.beginTransaction();
 
         int id = findLastId() + 1;
         User user = realm.createObject(User.class, id);
-        user.setName("Alice");
-        user.setAge(11);
+        user.setName(name);
 
         realm.commitTransaction();
 
