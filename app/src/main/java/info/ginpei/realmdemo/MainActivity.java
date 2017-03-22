@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
     private void readUser(final int id) {
         User user = realm.where(User.class).equalTo("id", id).findFirst();
         if (user != null) {
-            Log.d(TAG, String.format("readAllButton_click: #%d %s", user.getId(), user.getName()));
+            Log.d(TAG, String.format("readUser: #%d %s", user.getId(), user.getName()));
             Toast.makeText(MainActivity.this, "Read an user!", Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(MainActivity.this, "User not found!", Toast.LENGTH_SHORT).show();
@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
         realm.commitTransaction();
 
-        Log.d(TAG, String.format("readAllButton_click: %d user(s).", users.size()));
+        Log.d(TAG, String.format("updateAllUsers: %d user(s).", users.size()));
         Toast.makeText(MainActivity.this, "Updated " + users.size() + " user(s)!", Toast.LENGTH_SHORT).show();
     }
 
