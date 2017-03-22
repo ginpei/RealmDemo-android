@@ -175,6 +175,28 @@ public class MainActivity extends AppCompatActivity {
         realm.close();
     }
 
+    public void deleteAllButton_click(View view) {
+        // OK kill'em all!
+        deleteAllUsers();
+    }
+
+    private void deleteAllUsers() {
+        final Realm realm = Realm.getDefaultInstance();
+
+        RealmResults<User> users = realm.where(User.class).findAll();
+        int count = users.size();
+        realm.beginTransaction();
+        for (User user : users) {
+            user.deleteFromRealm();
+        }
+        realm.commitTransaction();
+
+        realm.close();
+
+        Log.d(TAG, String.format("deleteAllUsers: %d user(s).", count));  // users.size() returns 0 now
+        Toast.makeText(MainActivity.this, "Deleted " + count + " user(s)!", Toast.LENGTH_SHORT).show();
+    }
+
     public void deleteButton_click(View view) {
         InputDialogBuilder.show(this, "Delete", "Input user's ID", result -> {
             if (result != null && !result.isEmpty()) {
