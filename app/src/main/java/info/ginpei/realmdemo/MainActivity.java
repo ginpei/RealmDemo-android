@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Toast;
 
 import io.realm.Realm;
+import io.realm.RealmQuery;
 import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
@@ -50,9 +51,14 @@ public class MainActivity extends AppCompatActivity {
 
     private int findLastId() {
         final Realm realm = Realm.getDefaultInstance();
-        return realm.where(User.class)
-                .max("id")
-                .intValue();
+        RealmQuery<User> query = realm.where(User.class);
+        if (query.count() > 0) {
+            return query
+                    .max("id")
+                    .intValue();
+        } else {
+            return 0;
+        }
     }
 
     public void readAllButton_click(View view) {
